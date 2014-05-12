@@ -30,6 +30,9 @@
   Leap.loop(function(frame){})
       .use('handEntry')
       .on('handFound', function(hand){
-        console.log('hand found');
+        pubnub.publish({
+          channel : "hello_world",
+          message : "Someones hand was found"
+        });
       });
 })();
