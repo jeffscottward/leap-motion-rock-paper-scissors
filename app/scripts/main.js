@@ -10,7 +10,7 @@
 
   // Set up this environment's client subscriber instance
   pubnub.subscribe({
-    channel : "hello_world",
+    channel : "RPSchannel",
     message : function(msg) {
       console.log(msg)
     },
@@ -20,19 +20,73 @@
   // Function to push a a message
   function publish() {
     pubnub.publish({
-      channel : "hello_world",
-      message : "a client is present! woot!"
+      channel : "RPSchannel",
+      message : "A challenger appears! Get ready to fight!"
     });
   }
 
-  // Leap test
-  //  controller.use('handEntry');
-  Leap.loop(function(frame){})
-      .use('handEntry')
-      .on('handFound', function(hand){
-        pubnub.publish({
-          channel : "hello_world",
-          message : "Someones hand was found"
-        });
-      });
+  var RPSapp = {};
+      RPSapp.fingerCount;
+      RPSapp.playerChoice;
+      RPSapp.jumbotron = $('.jumbotron');
+
+  // For every frame
+  Leap.loop(function(frame){
+
+      // If there is a hand present
+      if(frame.hands.length > 0) {
+
+          // Set fingerCount to current count of fingers
+          RPSapp.fingerCount = frame.hands[0].fingers.length;
+
+          // Set Rock Paper Scissors Status
+          switch (RPSapp.fingerCount) {
+            case 0:
+              console.log('ROCK!')
+              RPSapp.playerChoice = 1;
+              break;
+            case 5:
+              console.log('PAPER!')
+              RPSapp.playerChoice = 2;
+              break;
+            case 2:
+              console.log('SCISSORS!')
+              RPSapp.playerChoice = 3;
+              break;
+          }
+      }
+
+      if ( RPSapp.playerChoice === 1 && !RPSapp.jumbotron.hasClass('rock') ) {
+        !RPSapp.jumbotron.toggleClass('rock');
+
+        !RPSapp.jumbotron.removeClass('paper');
+        !RPSapp.jumbotron.removeClass('scissors');
+      }
+
+      if ( RPSapp.playerChoice === 2 && !RPSapp.jumbotron.hasClass('paper') ) {
+        !RPSapp.jumbotron.toggleClass('paper');
+
+        !RPSapp.jumbotron.removeClass('rock');
+        !RPSapp.jumbotron.removeClass('scissors');
+      }
+
+      if ( RPSapp.playerChoice === 3 && !RPSapp.jumbotron.hasClass('scissors') ) {
+        !RPSapp.jumbotron.toggleClass('scissors');
+
+        !RPSapp.jumbotron.removeClass('rock');
+        !RPSapp.jumbotron.removeClass('paper');
+      }
+
+
+
+      // publish();
+
+      //         pubnub.publish({
+      //           channel : "hello_world",
+      //           message : "Someones hand was found"
+      //         });
+
+  });
+
+
 })();
