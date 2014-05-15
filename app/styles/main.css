@@ -55,8 +55,10 @@ body {
 }
 
 .jumbotron h1 {
-  display: none;
   color: white;
+}
+.jumbotron > div {
+  display: none;
 }
 
 .jumbotron.rock{
