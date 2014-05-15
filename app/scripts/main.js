@@ -45,6 +45,7 @@
     // Create a unique ID for this User
     assignUniqueID();
 
+    // Broadcast a new user has joined
     RPSapp.pubNub.publish({
       channel : "RPSchannel",
       message : "The challenger " + RPSapp.thisUserID + " appears! Get ready to fight!"
@@ -57,7 +58,6 @@
       channel : "RPSchannel",
       message : "The challenger " + RPSapp.thisUserID + " chose " + RPSapp.playerChoice
     });
-
   }
 
   // Get the current state of the channel
