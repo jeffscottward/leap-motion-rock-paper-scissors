@@ -34,8 +34,7 @@
 
   // Create unique ID for this client user
   function assignUniqueID() {
-    var newID = RPSapp.pubNub.uuid();
-    RPSapp.thisUser = newID;
+    RPSapp.thisUser = RPSapp.pubNub.uuid();
   }
 
   // On initial connection push a message
