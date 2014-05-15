@@ -2,12 +2,13 @@
 // Execute Function Immediately
 (function(){
 
+  // Basic App setup
   var RPSapp = {};
       RPSapp.fingerCount;
       RPSapp.playerChoice;
-      RPSapp.jumbotron = $('.jumbotron');
-      RPSapp.pubNub;
-      RPSapp.thisUser;
+      RPSapp.jumbotron = $('.jumbotron'); // Temporary Display area
+      RPSapp.pubNub; // PubNub API
+      RPSapp.thisUserID;
       RPSapp.init = function (){
         initPubNub();
         subscribeToPubNubChannel();
@@ -34,7 +35,7 @@
 
   // Create unique ID for this client user
   function assignUniqueID() {
-    RPSapp.thisUser = RPSapp.pubNub.uuid();
+    RPSapp.thisUserID = RPSapp.pubNub.uuid();
   }
 
   // On initial connection push a message
@@ -46,7 +47,7 @@
 
     RPSapp.pubNub.publish({
       channel : "RPSchannel",
-      message : "The challenger " + RPSapp.thisUser + " appears! Get ready to fight!"
+      message : "The challenger " + RPSapp.thisUserID + " appears! Get ready to fight!"
     });
   }
 
@@ -54,7 +55,7 @@
   function playerChoiceUpdate() {
     RPSapp.pubNub.publish({
       channel : "RPSchannel",
-      message : "The challenger " + RPSapp.thisUser + " chose " + RPSapp.playerChoice
+      message : "The challenger " + RPSapp.thisUserID + " chose " + RPSapp.playerChoice
     });
 
   }
@@ -91,6 +92,7 @@
             }
         }
 
+        // TODO: Refactor this and place in seperate function
         if ( RPSapp.playerChoice === 'ROCK!' && !RPSapp.jumbotron.hasClass('rock') ) {
 
           RPSapp.jumbotron.toggleClass('rock');
