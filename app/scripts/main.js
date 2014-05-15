@@ -42,6 +42,7 @@
   // To broadcast a user joining
   function onChannelJoin() {
 
+    // Create a unique ID for this User
     assignUniqueID();
 
     RPSapp.pubNub.publish({
