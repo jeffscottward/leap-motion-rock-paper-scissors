@@ -62,24 +62,24 @@ body {
 }
 
 .jumbotron.rock{
-    background: red;
+  background: red;
 }
 .jumbotron.rock .rock{
-    display: block;
+  display: block;
 }
 
 .jumbotron.paper{
-    background: green;
+  background: green;
 }
 .jumbotron.paper .paper{
-    display: block;
+  display: block;
 }
 
 .jumbotron.scissors{
     background: blue;
 }
 .jumbotron.scissors .scissors{
-    display: block;
+  display: block;
 }
 
 
