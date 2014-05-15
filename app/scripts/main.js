@@ -11,7 +11,6 @@
       RPSapp.init = function (){
         initPubNub();
         subscribeToPubNubChannel();
-        assignUniqueID();
         getCurrentChannelStatus();
         initLeap();
       }
@@ -35,7 +34,8 @@
 
   // Create unique ID for this client user
   function assignUniqueID() {
-    RPSapp.thisUser = RPSapp.pubNub.uuid();
+    var newID = RPSapp.pubNub.uuid();
+    RPSapp.thisUser = newID;
   }
 
   // On initial connection push a message
