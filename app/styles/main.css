@@ -43,42 +43,55 @@ body {
     margin: 30px 0;
 }
 
-/* Main marketing message and sign up button */
-.jumbotron {
+
+.player-list {
+  list-style: none;
+  padding: 0;
+}
+
+.player-list li {
+  display: inline-block;
+  vertical-align: top;
+  padding: 20px;
+  max-width: 25%;
+}
+
+.player-list li img {
+  max-width: 100%;
+}
+
+#thisUser {
     text-align: center;
     border-bottom: 1px solid #e5e5e5;
+    padding: 0;
 }
 
-.jumbotron .btn {
-    font-size: 21px;
-    padding: 14px 24px;
-}
-
-.jumbotron h1 {
+#thisUser h1 {
   color: white;
+  margin-top: 0;
 }
-.jumbotron > div {
+#thisUser > div {
   display: none;
 }
 
-.jumbotron.rock{
+#thisUser.rock {
   background: red;
 }
-.jumbotron.rock .rock{
+#thisUser.rock .rock {
   display: block;
 }
 
-.jumbotron.paper{
+#thisUser.paper {
   background: green;
 }
-.jumbotron.paper .paper{
+#thisUser.paper .paper {
   display: block;
 }
 
-.jumbotron.scissors{
+#thisUser.scissors {
     background: blue;
 }
-.jumbotron.scissors .scissors{
+#thisUser.scissors .scissors {
   display: block;
 }
 
