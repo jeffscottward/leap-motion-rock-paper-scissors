@@ -14,30 +14,26 @@
       RPSapp.thisUserID;
       RPSapp.init = function (){
         initPubNub();
-        subscribeToPubNubChannel();
-        getCurrentChannelStatus();
         initLeap();
       }
 
   // For Testing only
   function callStackReporter(funcName) {
-    console.log(funcName);
+    //console.log(funcName);
   }
 
   //Setup new PubNub Object c w/ auth Keys
   function initPubNub() {
     callStackReporter('initPubNub()');
 
+    // Connect to Pubnub with AUTH keys
+    // And a unique ID
     RPSapp.pubNub = PUBNUB.init({
       publish_key   : 'pub-c-d1d43525-54ef-4f9d-a6d3-909d601cc3f4',
       subscribe_key : 'sub-c-2885c358-da26-11e3-bf22-02ee2ddab7fe',
       uuid: assignUniqueID()
     });
-  }
 
-  // Subscribe to channel and broadcast you have done so
-  function subscribeToPubNubChannel() {
-    callStackReporter('subscribeToPubNubChannel()');
     RPSapp.pubNub.subscribe({
       channel : "RPSchannel",
       message : function(msg) {
@@ -47,9 +43,6 @@
         var choiceUpdate = msg.choiceUpdate;
 
         if (newUserID) {
-          // var newUsrDOMel = document.createElement('li');
-          //     newUsrDOMel.setAttribute('id',newUserID);
-          //     newUsrDOMel.classList.add('externalUser');
 
           var externalUserTemplate = "<li data-role=externalUser id='" + newUserID + "'><div class='rock'>" +
           "<h1>USER " + newUserID + "</h1><img src='/images/rps-rock.png'/></div><div class='paper'>" +
@@ -66,6 +59,7 @@
       },
       connect : onChannelJoin()
     });
+
   }
 
   // Create unique ID for this client user
@@ -149,6 +143,8 @@
 
   }
 
+  // Read leap frame input
+  // Figure out what hand sign it is
   function choiceDetector(frame){
     callStackReporter('choiceDetector()');
 
