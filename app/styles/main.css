@@ -60,41 +60,58 @@ body {
   max-width: 100%;
 }
 
-#thisUser {
+#thisUser,
+[data-role="externalUser"] {
     text-align: center;
     border-bottom: 1px solid #e5e5e5;
-    padding: 0;
 }
 
-#thisUser h1 {
+#thisUser h1,
+[data-role="externalUser"] h1 {
   color: white;
   margin-top: 0;
 }
-#thisUser > div {
+#thisUser > div,
+[data-role="externalUser"] > div {
   display: none;
 }
 
-#thisUser.rock {
+#thisUser.rock,
+[data-role="externalUser"].rock {
   background: red;
 }
-#thisUser.rock .rock {
+#thisUser.rock .rock,
+[data-role="externalUser"].rock .rock {
   display: block;
 }
 
-#thisUser.paper {
+#thisUser.paper,
+[data-role="externalUser"].paper {
   background: green;
 }
-#thisUser.paper .paper {
+#thisUser.paper .paper,
+[data-role="externalUser"].paper .paper {
   display: block;
 }
 
-#thisUser.scissors {
+#thisUser.scissors,
+[data-role="externalUser"].scissors {
     background: blue;
 }
-#thisUser.scissors .scissors {
+#thisUser.scissors .scissors,
+[data-role="externalUser"].scissors .scissors {
   display: block;
 }
 
+#thisUser h1,
+[data-role="externalUser"] h1 {
+  font-size: 18px;
+  margin-top: 0;
+}
+
+[data-role="externalUser"] h1 {
+  font-size: 9px;
+}
 
 
 /* Supporting marketing content */

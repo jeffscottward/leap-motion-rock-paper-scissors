@@ -47,11 +47,16 @@
         var choiceUpdate = msg.choiceUpdate;
 
         if (newUserID) {
-          var newUsrDOMel = document.createElement('li');
-              newUsrDOMel.setAttribute('id',newUserID);
-              newUsrDOMel.classList.add('externalUser');
+          // var newUsrDOMel = document.createElement('li');
+          //     newUsrDOMel.setAttribute('id',newUserID);
+          //     newUsrDOMel.classList.add('externalUser');
 
-          RPSapp.displayArea.playerList.append(newUsrDOMel);
+          var externalUserTemplate = "<li data-role=externalUser id='" + newUserID + "'><div class='rock'>" +
+          "<h1>USER " + newUserID + "</h1><img src='/images/rps-rock.png'/></div><div class='paper'>" +
+          "<h1>USER " + newUserID + "</h1><img src='/images/rps-paper.png'/></div><div class='scissors'>" +
+          "<h1>USER " + newUserID + "</h1><img src='/images/rps-scissors.png'/></div></li>";
+          RPSapp.displayArea.playerList.append(externalUserTemplate);
+
         }
 
         if(choiceUpdate) {
@@ -122,19 +127,19 @@
         RPSapp.displayArea.thisUser.removeClass()
       }
       break;
-    case 1:
+    case 'rock':
       if (!RPSapp.displayArea.thisUser.hasClass('rock')){
         RPSapp.displayArea.thisUser.attr( "class", "rock" )
         playerChoiceUpdate();
       }
       break;
-    case 2:
+    case 'paper':
       if (!RPSapp.displayArea.thisUser.hasClass('paper')){
         RPSapp.displayArea.thisUser.attr( "class", "paper" )
         playerChoiceUpdate();
       }
       break;
-    case 3:
+    case 'scissors':
       if (!RPSapp.displayArea.thisUser.hasClass('scissors')){
         RPSapp.displayArea.thisUser.attr( "class", "scissors" )
         playerChoiceUpdate();
@@ -156,13 +161,13 @@
         // Set Rock Paper Scissors Status
         switch (RPSapp.fingerCount) {
         case 0:
-          RPSapp.playerChoice = 1;
+          RPSapp.playerChoice = 'rock';
           break;
         case 5:
-          RPSapp.playerChoice = 2;
+          RPSapp.playerChoice = 'paper';
           break;
         case 2:
-          RPSapp.playerChoice = 3;
+          RPSapp.playerChoice = 'scissors';
           break;
         }
 
