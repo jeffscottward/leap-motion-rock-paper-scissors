@@ -104,7 +104,7 @@
 
     RPSapp.pubNub.here_now({
       channel : 'RPSchannel',
-      callback : function(msg){console.log(msg)}
+      callback : function receiver( message, envelope, channel ) { console.log(message, channel ) }
     });
   }
 
