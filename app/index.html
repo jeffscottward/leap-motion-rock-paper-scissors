@@ -14,6 +14,7 @@
         <!-- endbuild -->
         <!-- build:css(.tmp) styles/main.css -->
         <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href="styles/flipclock.css">
         <!-- endbuild -->
     </head>
     <body>
@@ -21,8 +22,14 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <div class="container">
-            <div class="header">
-                <h3 class="text-muted">Rock Paper Scissors</h3>
+            <div class="header clearfix">
+                <h3 class="pull-left text-muted">Rock Paper Scissors</h3>
+                <div class="pull-right" id="rps-clock"></div>
+                <div class="instructions pull-left" style="clear: left">
+                  <h5>Welcome to the worlds largest rock paper scissors game!</h5>
+                  <p>Please make sure your Leap Motion Controller is connected</p>
+                  <p>Have fun!</b>
+                </div>
             </div>
             <ul id="player-list" class="player-list">
               <li id="thisUser">
@@ -82,6 +89,7 @@
         <!-- endbuild -->
 
         <!-- build:js({app,.tmp}) scripts/main.js -->
+        <script src="scripts/flipclock.min.js"></script>
         <script src="scripts/main.js"></script>
         <!-- endbuild -->
 </body>

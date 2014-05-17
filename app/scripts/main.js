@@ -15,7 +15,20 @@
       RPSapp.init = function (){
         initPubNub();
         initLeap();
+        initClock();
       }
+
+  function initClock(){
+    var clock = $('#rps-clock').FlipClock(3,{
+      autoStart: true,
+      countdown: true
+    });
+
+    var secondTickerShadow = $('.flip-clock-divider.seconds + .flip + .flip [data-digit="0"] .down');
+        secondTickerShadow.on('webkitAnimationEnd',function(e){
+          console.log('fire!!!!!')
+        });
+  }
 
   // For Testing only
   function callStackReporter(funcName) {

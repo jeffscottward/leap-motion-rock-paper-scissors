@@ -29,7 +29,7 @@ body {
     margin-top: 0;
     margin-bottom: 0;
     line-height: 40px;
-    padding-bottom: 19px;
+    /*padding-bottom: 19px;*/
 }
 
 /* Custom page footer */
@@ -41,6 +41,10 @@ body {
 
 .container-narrow > hr {
     margin: 30px 0;
+}
+
+.instructions * {
+  margin: 0;
 }
 
 
@@ -114,6 +118,15 @@ body {
 }
 
 
+.flip-clock-divider.hours,
+.flip-clock-divider.hours + .flip,
+.flip-clock-divider.hours + .flip + .flip,
+.flip-clock-divider.minutes,
+.flip-clock-divider.minutes + .flip,
+.flip-clock-divider.minutes + .flip + .flip,
+.flip-clock-divider.seconds {
+  display: none;
+}
 /* Supporting marketing content */
 .marketing {
     margin: 40px 0;
