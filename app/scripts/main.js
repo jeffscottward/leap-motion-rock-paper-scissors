@@ -12,6 +12,7 @@
       }; // Temporary Display area
       RPSapp.pubNub; // PubNub API
       RPSapp.thisUserID;
+      RPSapp.gameRunning = true;
       RPSapp.init = function (){
         initPubNub();
         initLeap();
@@ -196,7 +197,9 @@
     callStackReporter('choiceDetector()');
 
     Leap.loop(function(frame){
+      while (RPSapp.gameRunning === true) {
         choiceDetector(frame);
+      }
     });
   }
 
