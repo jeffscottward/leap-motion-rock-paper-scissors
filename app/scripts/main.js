@@ -9,33 +9,55 @@
       RPSapp.displayArea = {
         playerList: $('#player-list'),
         thisUser: $('#thisUser')
-      }; // Temporary Display area
+      };
       RPSapp.pubNub; // PubNub API
       RPSapp.thisUserID;
       RPSapp.gameRunning = true;
+      RPSapp.clock = $('#rps-clock').FlipClock(3,{autoStart: true,countdown: true});
+      RPSapp.clockTime = RPSapp.clock.getTime();
       RPSapp.init = function (){
         initPubNub();
+        getCurrentChannelStatus();
         initLeap();
         initClock();
       }
 
+  // For Testing only
+  function callStackReporter(funcName) {
+    console.log(funcName);
+  }
+
   function initClock(){
-    var clock = $('#rps-clock').FlipClock(3,{
-      autoStart: true,
-      countdown: true
-    });
+    callStackReporter('initClock');
 
     var secondTickerShadow = $('.flip-clock-divider.seconds + .flip + .flip [data-digit="0"] .down');
         secondTickerShadow.on('webkitAnimationEnd',function(e){
           RPSapp.gameRunning = false;
-          console.log('RPSapp.gameRunning: ' + RPSapp.gameRunning);
           console.log('Round Over! You chose ' + RPSapp.playerChoice + '!');
         });
   }
 
-  // For Testing only
-  function callStackReporter(funcName) {
-    //console.log(funcName);
+  function updateGlobalTimer() {
+    callStackReporter('updateGlobalTimer');
+
+    // console.log();
+
+    RPSapp.pubNub.publish({
+      channel : "rps_channel",
+      message : {
+        currentTime: RPSapp.clockTime.factory.time.time.toString()
+      }
+    });
+  }
+
+
+  // Build new user tempalte and inject
+  function injectUser(userId) {
+    var externalUserTemplate = "<li data-role=externalUser id='" + userId + "'><div class='rock'>" +
+    "<h1>USER " + userId + "</h1><img src='/images/rps-rock.png'/></div><div class='paper'>" +
+    "<h1>USER " + userId + "</h1><img src='/images/rps-paper.png'/></div><div class='scissors'>" +
+    "<h1>USER " + userId + "</h1><img src='/images/rps-scissors.png'/></div></li>";
+    RPSapp.displayArea.playerList.append(externalUserTemplate);
   }
 
   //Setup new PubNub Object c w/ auth Keys
@@ -50,27 +72,22 @@
       uuid: assignUniqueID()
     });
 
+    // Subscribe to channel and handle messages
     RPSapp.pubNub.subscribe({
-      channel : "RPSchannel",
+      channel : "rps_channel",
       message : function(msg) {
 
         var newUserID = msg.newUser;
         var user = msg.user;
         var choiceUpdate = msg.choiceUpdate;
 
-        if (newUserID) {
+        // If a new user message recieved
+        // inject user
+        if (newUserID) {injectUser(userId)}
 
-          var externalUserTemplate = "<li data-role=externalUser id='" + newUserID + "'><div class='rock'>" +
-          "<h1>USER " + newUserID + "</h1><img src='/images/rps-rock.png'/></div><div class='paper'>" +
-          "<h1>USER " + newUserID + "</h1><img src='/images/rps-paper.png'/></div><div class='scissors'>" +
-          "<h1>USER " + newUserID + "</h1><img src='/images/rps-scissors.png'/></div></li>";
-          RPSapp.displayArea.playerList.append(externalUserTemplate);
-
-        }
-
-        if(choiceUpdate) {
-          $('#' + user).attr('class',choiceUpdate);
-        }
+        // If a choice update message recieved
+        // update the ID DOM
+        if(choiceUpdate) {$('#' + user).attr('class',choiceUpdate);}
 
       },
       connect : onChannelJoin()
@@ -92,7 +109,7 @@
 
     // Broadcast a new user has joined
     RPSapp.pubNub.publish({
-      channel : "RPSchannel",
+      channel : "rps_channel",
       message : {
         newUser: RPSapp.thisUserID,
         bodyMsg: "The challenger " + RPSapp.thisUserID + " appears! Get ready to fight!"
@@ -105,7 +122,7 @@
     callStackReporter('playerChoiceUpdate()');
 
     RPSapp.pubNub.publish({
-      channel : "RPSchannel",
+      channel : "rps_channel",
       message : {
         user: RPSapp.thisUserID,
         choiceUpdate: RPSapp.playerChoice,
@@ -119,8 +136,14 @@
     callStackReporter('getCurrentChannelStatus()');
 
     RPSapp.pubNub.here_now({
-      channel : 'RPSchannel',
-      callback : function receiver( message, envelope, channel ) { console.log(message, channel ) }
+      channel : 'rps_channel',
+      callback : function receiver( message ) {
+        if( message.uuids.length > 0 ) {
+          message.uuids.forEach(function(uuid){
+            injectUser(uuid);
+          });
+        }
+      }
     });
   }
 
@@ -201,6 +224,7 @@
     Leap.loop(function(frame){
       if (RPSapp.gameRunning === true) {
         choiceDetector(frame);
+        updateGlobalTimer();
       }
     });
   }
