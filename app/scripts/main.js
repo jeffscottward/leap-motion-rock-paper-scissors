@@ -27,7 +27,9 @@
 
     var secondTickerShadow = $('.flip-clock-divider.seconds + .flip + .flip [data-digit="0"] .down');
         secondTickerShadow.on('webkitAnimationEnd',function(e){
-          console.log('fire!!!!!')
+          RPSapp.gameRunning = false;
+          console.log('RPSapp.gameRunning: ' + RPSapp.gameRunning);
+          console.log('Round Over! You chose ' + RPSapp.playerChoice + '!');
         });
   }
 
@@ -197,7 +199,7 @@
     callStackReporter('choiceDetector()');
 
     Leap.loop(function(frame){
-      while (RPSapp.gameRunning === true) {
+      if (RPSapp.gameRunning === true) {
         choiceDetector(frame);
       }
     });
