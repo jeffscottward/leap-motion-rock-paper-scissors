@@ -14,7 +14,6 @@
         <!-- endbuild -->
         <!-- build:css(.tmp) styles/main.css -->
         <link rel="stylesheet" href="styles/main.css">
-        <link rel="stylesheet" href="styles/flipclock.css">
         <!-- endbuild -->
     </head>
     <body>
@@ -22,59 +21,36 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <div class="container">
-            <div class="header clearfix">
-                <div class="header-left pull-left">
-                  <h3 class="pull-left text-muted">Rock Paper Scissors</h3>
-                  <div class="instructions pull-left" style="clear: left">
-                    <h5>Welcome to the worlds largest rock paper scissors game!</h5>
-                    <p>Please make sure your Leap Motion Controller is connected</p>
-                    <p>Have fun!</b>
-                  </div>
-                </div>
-                <table class="pull-left scoreboard">
-                  <thead>
-                    <tr>
-                      <th>Scoreboard</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>User XX</td>
-                      <td>9827482 wins</td>
-                    </tr>
-                    <tr>
-                      <td>User XX</td>
-                      <td>9827482 wins</td>
-                    </tr>
-                    <tr>
-                      <td>User XX</td>
-                      <td>9827482 wins</td>
-                    </tr>
-                    <tr>
-                      <td>User XX</td>
-                      <td>9827482 wins</td>
-                    </tr>
-                  </tbody>
 
-                </table>
-                <div class="pull-right" id="rps-clock"></div>
-            </div>
-            <ul id="player-list" class="player-list">
-              <li id="thisUser">
-                  <div class="rock">
-                    <h1>You</h1>
-                    <img src="/images/rps-rock.png"/>
-                  </div>
-                  <div class="paper">
-                    <h1>You</h1>
-                    <img src="/images/rps-paper.png"/>
-                  </div>
-                  <div class="scissors">
-                    <h1>You</h1>
-                    <img src="/images/rps-scissors.png"/>
-                  </div>
-              </li>
-            </ul>
+            <div class="header clearfix">
+              <div class="header-left pull-left">
+                <h3 class="pull-left text-muted">Rock Paper Scissors</h3>
+                <div class="instructions pull-left" style="clear: left">
+                  <h5>Welcome to Rock Paper Scissors!</h5>
+                  <p>Please make sure your Leap Motion Controller is connected!</p>
+                </div>
+              </div>
+
+            <!-- <table class="pull-left scoreboard">
+            <thead>
+              <tr>
+                <th>Scoreboard</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>User XX</td>
+                <td>9827482 wins</td>
+              </tr>
+              <tr>
+                <td>User XX</td>
+                <td>9827482 wins</td>
+              </tr>
+            </tbody>
+          </table> -->
+        </div>
+
+            <ul id="player-list" class="player-list"></ul>
         </div>
 
 
