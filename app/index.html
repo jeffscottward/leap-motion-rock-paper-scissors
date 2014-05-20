@@ -22,37 +22,37 @@
         <![endif]-->
         <div class="container">
 
-            <div class="header clearfix">
-              <div class="header-left pull-left">
-                <h3 class="pull-left text-muted">Rock Paper Scissors</h3>
-                <div class="instructions pull-left" style="clear: left">
-                  <h5>Welcome to Rock Paper Scissors!</h5>
-                  <p>Please make sure your Leap Motion Controller is connected!</p>
-                </div>
+          <div class="header clearfix">
+            <div class="header-left pull-left">
+              <h3 class="pull-left text-muted">Rock Paper Scissors</h3>
+              <div class="instructions pull-left" style="clear: left">
+                <h5>Welcome to Rock Paper Scissors!</h5>
+                <p>Please make sure your Leap Motion Controller is connected!</p>
               </div>
+            </div>
 
-            <!-- <table class="pull-left scoreboard">
-            <thead>
-              <tr>
-                <th>Scoreboard</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>User XX</td>
-                <td>9827482 wins</td>
-              </tr>
-              <tr>
-                <td>User XX</td>
-                <td>9827482 wins</td>
-              </tr>
-            </tbody>
-          </table> -->
+              <!-- <table class="pull-left scoreboard">
+              <thead>
+                <tr>
+                  <th>Scoreboard</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>User XX</td>
+                  <td>9827482 wins</td>
+                </tr>
+                <tr>
+                  <td>User XX</td>
+                  <td>9827482 wins</td>
+                </tr>
+              </tbody>
+            </table> -->
+          </div>
+
+          <ul id="player-list" class="player-list"></ul>
+
         </div>
-
-            <ul id="player-list" class="player-list"></ul>
-        </div>
-
 
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
@@ -60,40 +60,16 @@
         <!-- endbower -->
         <!-- endbuild -->
 
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-            e.src='//www.google-analytics.com/analytics.js';
-            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-            ga('create','UA-XXXXX-X');ga('send','pageview');
-        </script>
-
         <!-- PubNub -->
         <script src="http://cdn.pubnub.com/pubnub.min.js"></script>
         <!-- END_PubNub -->
 
         <!-- build:js scripts/plugins.js -->
-        <script src="../bower_components/bootstrap/js/affix.js"></script>
-        <script src="../bower_components/bootstrap/js/alert.js"></script>
-        <script src="../bower_components/bootstrap/js/dropdown.js"></script>
-        <script src="../bower_components/bootstrap/js/tooltip.js"></script>
-        <script src="../bower_components/bootstrap/js/modal.js"></script>
-        <script src="../bower_components/bootstrap/js/transition.js"></script>
-        <script src="../bower_components/bootstrap/js/button.js"></script>
-        <script src="../bower_components/bootstrap/js/popover.js"></script>
-        <script src="../bower_components/bootstrap/js/carousel.js"></script>
-        <script src="../bower_components/bootstrap/js/scrollspy.js"></script>
-        <script src="../bower_components/bootstrap/js/collapse.js"></script>
-        <script src="../bower_components/bootstrap/js/tab.js"></script>
-
         <script src="../bower_components/leapjs/leap-0.5.0.min.js"></script>
         <script src="../bower_components/leapjs-plugins/main/leap-plugins-0.1.5.min.js"></script>
         <!-- endbuild -->
 
         <!-- build:js({app,.tmp}) scripts/main.js -->
-        <script src="scripts/flipclock.min.js"></script>
         <script src="scripts/main.js"></script>
         <!-- endbuild -->
 </body>
