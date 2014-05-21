@@ -165,6 +165,7 @@ function getCurrentChannelStatus() {
         message.uuids.forEach(function(uuid){
           injectUser(uuid);
         });
+
       }
     }
   });
