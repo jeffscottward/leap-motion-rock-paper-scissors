@@ -13,32 +13,11 @@ var RPSapp = {};
     RPSapp.injectedUsersDictionary = {}; // DOM Dictionary for Injected Users
     RPSapp.init = function (){
       initPubNub();
-      getCurrentChannelStatus();
       initLeap();
-      // roundOverDetection();
     }
 
 // TODO: Replace Clock w/ TimeStamp via Presence API
 // http://www.pubnub.com/docs/javascript/overview/presence.html#_using_presence_api
-
-// On initial connection push a message
-// To broadcast a user joining
-function onChannelJoin() {
-  callStackReporter('onChannelJoin()');
-
-  // Broadcast a new user has joined
-  RPSapp.pubNub.publish({
-    channel : RPSapp.channelID,
-    message : {
-      newUser: RPSapp.thisUserID,
-      bodyMsg: "The challenger " + RPSapp.thisUserID + " appears! Get ready to fight!"
-    }
-  });
-
-  console.log( RPSapp.thisUserID + ' has joined ' + RPSapp.channelID );
-
-  injectUser(RPSapp.thisUserID);
-}
 
 //Setup new PubNub Object c w/ auth Keys
 function initPubNub() {
@@ -57,14 +36,19 @@ function initPubNub() {
 }
 
 function initSubscribe(){
+  callStackReporter('initSubscribe()');
   RPSapp.pubNub.subscribe({
     channel : RPSapp.channelID,
-    presence: function(presence){
-      // console.log("presence: "); console.dir(presence)
-    },
-    message : function(msg){channelSubscriptionMsgHandler(msg)},
-    connect : onChannelJoin()
+    connect : checkCurrentChannel(),
+    callback: function(msgCB){
+      channelSubscriptionMsgHandler(msgCB)
+    }
   });
+}
+
+function handleIncomingMessages(msgCB){
+  callStackReporter('handleIncomingMessages()');
+  console.log(msgCB)
 }
 
 // Create unique ID for this client user
@@ -95,80 +79,91 @@ function assignUniqueUserID() {
 
 // Build new user tempalte and inject
 function injectUser(userId) {
+
+  // Basic User Setup with ID injected
   var externalUserTemplate = "<li data-role=externalUser id='" + userId + "'><div class='rock'>" +
   "<h1>USER " + userId + "</h1><img src='/images/rps-rock.png'/></div><div class='paper'>" +
   "<h1>USER " + userId + "</h1><img src='/images/rps-paper.png'/></div><div class='scissors'>" +
   "<h1>USER " + userId + "</h1><img src='/images/rps-scissors.png'/></div></li>";
+
+  // Add user with the ID
   RPSapp.playerList.append(externalUserTemplate);
+
+  // Set a simple local name reference for ease of access
   RPSapp.injectedUsers.push(userId);
+
+  // Set up Name to DOM refence
   RPSapp.injectedUsersDictionary[userId] = $('#' + userId);
 }
+
+var extrainjection = false;
 
 // Handle all messages
 function channelSubscriptionMsgHandler(msg){
 
-  var newUserID = msg.newUser;
-  var userID = msg.user;
-  var choiceUpdate = msg.choiceUpdate;
-
-  if (msg.newUser) {
-      for(var i = 0; i < RPSapp.injectedUsers.length; i++) {
-        if(newUserID !== RPSapp.injectedUsers[i]) {
-          i++;
-          injectUser(newUserID);
-        }
-      }
+  if (msg.newUser && $('#' + msg.newUser).length === 0 ) {
+    injectUser(msg.newUser);
   }
 
   // If a choice update message recieved
   // update the ID DOM
-  if(choiceUpdate) {
-    console.log(choiceUpdate);
+  if(msg.choiceUpdate) {
+    console.log(msg.user + " says " + msg.choiceUpdate);
 
-    RPSapp.injectedUsersDictionary[userID].attr('class',choiceUpdate);
+    console.log($(msg.user));
+
+    if(extrainjection === false){
+      extrainjection = true;
+      injectUser(msg.user);
+    }
+
+    RPSapp.injectedUsersDictionary[msg.user].attr('class',msg.choiceUpdate);
   }
 
 }
 
-// Update this players choice on the channel
-function playerChoiceUpdate() {
-  callStackReporter('playerChoiceUpdate()');
-
-  RPSapp.pubNub.publish({
-    channel : RPSapp.channelID,
-    message : {
-      user: RPSapp.thisUserID,
-      choiceUpdate: RPSapp.playerChoice,
-      bodyMsg: "The challenger " + RPSapp.thisUserID + " chose " + RPSapp.playerChoice
-    }
-  });
-}
-
 // Get the current state of the channel
-function getCurrentChannelStatus() {
-  callStackReporter('getCurrentChannelStatus()');
+function checkCurrentChannel() {
+  callStackReporter('checkCurrentChannel()');
 
   // Ping Presence API
   RPSapp.pubNub.here_now({
     channel : RPSapp.channelID,
     callback : function receiver( message ) {
-
-      // If the room already has 2 players
-      if( message.occupancy >= 2 ) {
-
-        // Reset ID in storage nd start a new room
-        assignUniqueUserID();
-        window.location = window.location.origin;
-      } else {
-
-        // Populate DOM for connected users
-        message.uuids.forEach(function(uuid){
-          injectUser(uuid);
-        });
-
-      }
+      handleOccupancyCount(message);
     }
   });
+}
+
+function handleOccupancyCount(message) {
+  callStackReporter('handleOccupancyCount()');
+
+  console.log(message);
+
+  // If the room already has 2 players
+  if( message.occupancy >= 2 ) {
+
+    console.log('at least 2, goodbye')
+
+    // Reset ID in storage nd start a new room
+    assignUniqueUserID();
+    window.location = window.location.origin;
+
+    } else {
+
+      console.log('less than 2, youre OK')
+
+      // Populate DOM for connected users
+      message.uuids.forEach(function(uuid){
+        injectUser(uuid);
+      });
+
+      if($('#' + RPSapp.thisUserID).length === 0) {
+        console.log('inject local dude')
+        injectUser(RPSapp.thisUserID);
+
+      }
+  }
 }
 
 // Update the DOM based on player choice
@@ -182,24 +177,25 @@ function uiUpdater() {
   case 0:
     if (!RPSapp.injectedUsersDictionary[RPSapp.thisUserID].hasClass()) {
       RPSapp.injectedUsersDictionary[RPSapp.thisUserID].removeClass()
+      playerChoiceUpdatePublish();
     }
     break;
   case 'rock':
     if (!RPSapp.injectedUsersDictionary[RPSapp.thisUserID].hasClass('rock')){
       RPSapp.injectedUsersDictionary[RPSapp.thisUserID].attr( "class", "rock" )
-      playerChoiceUpdate();
+      playerChoiceUpdatePublish();
     }
     break;
   case 'paper':
     if (!RPSapp.injectedUsersDictionary[RPSapp.thisUserID].hasClass('paper')){
       RPSapp.injectedUsersDictionary[RPSapp.thisUserID].attr( "class", "paper" )
-      playerChoiceUpdate();
+      playerChoiceUpdatePublish();
     }
     break;
   case 'scissors':
     if (!RPSapp.injectedUsersDictionary[RPSapp.thisUserID].hasClass('scissors')){
       RPSapp.injectedUsersDictionary[RPSapp.thisUserID].attr( "class", "scissors" )
-      playerChoiceUpdate();
+      playerChoiceUpdatePublish();
     }
     break;
   }
@@ -232,11 +228,6 @@ function choiceDetector(frame){
 
       // Update UI
       uiUpdater();
-
-  // If there is NOT a hand present
-  } else {
-    RPSapp.playerChoice = 0;
-    uiUpdater();
   }
 
 }
@@ -248,7 +239,22 @@ function initLeap() {
   Leap.loop(function(frame){
     if (RPSapp.gameRunning === true) {
       choiceDetector(frame);
-      // updateGlobalTimer();
+    }
+  });
+}
+
+// Update this players choice on the channel
+function playerChoiceUpdatePublish() {
+  callStackReporter('playerChoiceUpdatePublish()');
+
+  console.log('push message from:' + RPSapp.thisUserID)
+
+  RPSapp.pubNub.publish({
+    channel : RPSapp.channelID,
+    message : {
+      user: RPSapp.thisUserID,
+      choiceUpdate: RPSapp.playerChoice,
+      bodyMsg: "The challenger " + RPSapp.thisUserID + " chose " + RPSapp.playerChoice
     }
   });
 }
@@ -265,20 +271,6 @@ function createGameId(){
   return token();
 }
 
-// TODO: Clock
-// Start the clock
-function roundOverDetection(){
-  callStackReporter('initClock');
-
-  RPSapp.gameRunning = false;
-  console.log('Round Over! You chose ' + RPSapp.playerChoice + '!');
-}
-
-// Publish to channel the time
-function updateGlobalTimer() {
-  callStackReporter('updateGlobalTimer');
-}
-
 // For Testing only
 function callStackReporter(funcName) {
   console.log(funcName);
@@ -288,5 +280,5 @@ function callStackReporter(funcName) {
 RPSapp.init();
 
 // For Testing only
-window.getCurrentChannelStatus = getCurrentChannelStatus;
+window.checkCurrentChannel = checkCurrentChannel;
 window.RPSapp = RPSapp;
