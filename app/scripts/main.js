@@ -41,14 +41,9 @@ function initSubscribe(){
     channel : RPSapp.channelID,
     connect : checkCurrentChannel(),
     callback: function(msgCB){
-      channelSubscriptionMsgHandler(msgCB)
+      console.log(msgCB);
     }
   });
-}
-
-function handleIncomingMessages(msgCB){
-  callStackReporter('handleIncomingMessages()');
-  console.log(msgCB)
 }
 
 // Create unique ID for this client user
@@ -57,8 +52,6 @@ function assignUniqueUserID() {
 
   // Retrieve from Localstorage first
   var localID = localStorage.getItem("RPSuuid");
-
-  // console.log(localID);
 
   // If there is an ID
   if( localID !== "" &&
@@ -101,10 +94,6 @@ var extrainjection = false;
 // Handle all messages
 function channelSubscriptionMsgHandler(msg){
 
-  if (msg.newUser && $('#' + msg.newUser).length === 0 ) {
-    injectUser(msg.newUser);
-  }
-
   // If a choice update message recieved
   // update the ID DOM
   if(msg.choiceUpdate) {
@@ -112,10 +101,10 @@ function channelSubscriptionMsgHandler(msg){
 
     console.log($(msg.user));
 
-    if(extrainjection === false){
-      extrainjection = true;
-      injectUser(msg.user);
-    }
+    // if(extrainjection === false){
+    //   extrainjection = true;
+    //   injectUser(msg.user);
+    // }
 
     RPSapp.injectedUsersDictionary[msg.user].attr('class',msg.choiceUpdate);
   }
@@ -125,6 +114,8 @@ function channelSubscriptionMsgHandler(msg){
 // Get the current state of the channel
 function checkCurrentChannel() {
   callStackReporter('checkCurrentChannel()');
+
+  console.log('Connected');
 
   // Ping Presence API
   RPSapp.pubNub.here_now({
@@ -141,17 +132,17 @@ function handleOccupancyCount(message) {
   console.log(message);
 
   // If the room already has 2 players
-  if( message.occupancy >= 2 ) {
-
-    console.log('at least 2, goodbye')
-
-    // Reset ID in storage nd start a new room
-    assignUniqueUserID();
-    window.location = window.location.origin;
-
-    } else {
-
-      console.log('less than 2, youre OK')
+  // if( message.occupancy >= 2 ) {
+  //
+  //   console.log('at least 2, goodbye')
+  //
+  //   // Reset ID in storage nd start a new room
+  //   assignUniqueUserID();
+  //   window.location = window.location.origin;
+  //
+  //   } else {
+  //
+  //     console.log('less than 2, youre OK')
 
       // Populate DOM for connected users
       message.uuids.forEach(function(uuid){
@@ -163,7 +154,7 @@ function handleOccupancyCount(message) {
         injectUser(RPSapp.thisUserID);
 
       }
-  }
+  // }
 }
 
 // Update the DOM based on player choice
@@ -246,8 +237,6 @@ function initLeap() {
 // Update this players choice on the channel
 function playerChoiceUpdatePublish() {
   callStackReporter('playerChoiceUpdatePublish()');
-
-  console.log('push message from:' + RPSapp.thisUserID)
 
   RPSapp.pubNub.publish({
     channel : RPSapp.channelID,
